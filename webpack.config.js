@@ -5,7 +5,7 @@ module.exports = {
   entry: slsw.lib.entries,
   target: "node",
   //exclude all node dependencies
-  externals: [nodeExternals()]
+  externals: [nodeExternals()],
   module: {
     rules: [
       {

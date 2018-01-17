@@ -11,9 +11,71 @@ custom:
 provider:
   name: aws
   runtime: nodejs6.10
-  stage: prod
+  stage: dev
   region: eu-central-1
+  
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:eu-central-1:*:*"
 
+functions:
+    #Defines an HTTP API endpoint that calls the main function in create.js
+    #path: url path is /notes
+    #method: POST request
+    #cors: enabled CORS for browser cross domain api call
+    #authorizer: authenticate using AWS IAM role
+  create:
+    handler: create.main
+    events:
+      - http:
+          path: notes
+          method: post
+          cors: true
+          authorizer: aws_iam
+  get:
+  #calls the main function get.js
+    handler: get.main
+    events:
+      - http:
+          path: notes/{id}
+          method: get
+          cors: true
+          authorizer: aws_iam
+  list:
+    #calls main function in list.js
+    handler: list.main
+    events:
+      - http:
+          path: notes
+          method: get
+          cors: true
+          authorizer: aws_iam
+  update:
+    #calls main function in update.js
+    handler: update.main
+    events:
+      - http:
+          path: notes/{id}
+          method: put
+          cors: true
+          authorizer: aws_iam
+  delete:
+    #calls main function in delete.js
+    handler: delete.main
+    events:
+      - http:
+          path: notes/{id}
+          method: delete
+          cors: true
+          authorizer: aws_iam
 # Welcome to Serverless!
 #
 # This file is the main config file for your service.
