@@ -6,3 +6,4 @@ jspm_packages
 .serverless
 
 /client/src/config.js
+config.js
